@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :require_user_logged_in, only: [:index, :show]
+  before_action :require_user_logged_in, only: [:index, :show, :followings, :followers]
+  before_action :set_user, only: [:followings, :followers]
   
   def index
     @users = User.all.page(params[:page]) # 全ユーザ取得、ページネーション適用
@@ -26,10 +27,25 @@ class UsersController < ApplicationController
       render :new # users/new.html.erbを表示
     end
   end
+  
+  def followings
+    @followings = @user.followings.page(params[:page])
+    counts(@user)
+  end
+  
+  def followers
+    @followers = @user.followers.page(params[:page])
+    counts(@user)
+  end
     
   private
     
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
+  
+  def set_user
+    @user = User.find(params[:id])
+  end
+  
 end
