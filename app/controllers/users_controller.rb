@@ -1,13 +1,12 @@
 class UsersController < ApplicationController
-  before_action :require_user_logged_in, only: [:index, :show, :followings, :followers]
-  before_action :set_user, only: [:followings, :followers]
+  before_action :require_user_logged_in, only: [:index, :show, :followings, :followers, :likes]
+  before_action :set_user, only: [:show, :followings, :followers, :likes]
   
   def index
     @users = User.all.page(params[:page]) # 全ユーザ取得、ページネーション適用
   end
 
   def show
-    @user = User.find(params[:id])  # 特定のユーザ取得
     @microposts = @user.microposts.order('created_at DESC').page(params[:page])
     counts(@user)
   end
@@ -37,7 +36,11 @@ class UsersController < ApplicationController
     @followers = @user.followers.page(params[:page])
     counts(@user)
   end
-    
+  
+  def likes
+    @likes = @user.likes.page(params[:page])
+  end
+  
   private
     
   def user_params
