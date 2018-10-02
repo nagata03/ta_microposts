@@ -10,9 +10,11 @@ Rails.application.routes.draw do
     member do
       get :followings
       get :followers
+      get :likes
     end
   end
   
   resources :microposts, only: [:create, :destroy]  # showに該当する一覧はユーザに紐づいているので、users#showで表示する
   resources :relationships, only: [:create, :destroy]
+  resources :favorites, only: [:create, :destroy]
 end
